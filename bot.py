@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters import Command
 from aiogram.utils import executor
 import requests
 
-bot = Bot(token='6273491081:AAGHyX18pgOTjSgYilP90CZ-7GjwEPutLCc')
+bot = Bot(token='6273491081:AAEBVJ2paplE3C4KZE3fNT6qpsRk_YPW7bk')
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
