@@ -38,18 +38,17 @@ async def f(message: types.Message):
         response = requests.post(url, json=payload, headers=headers)
         text = response.json()['message']
 
-
         if response.json()['image_urls']:
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
             await bot.send_photo(chat_id=message.chat.id, photo=response.json()['image_urls'][0])
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
                 "key": "emjh65FFSdStgAObHVSH3dDCcvOpRRgnLcx9EZz4gqm46wmFd73tLzvneQiv",
-                "prompt": message.text + ', drawing style, detailed, hd, cartoon style, realism'
+                "prompt": message.text + ', drawing style, drawing,  detailed, hd, cartoon style, not realistic',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
                                 (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
                                 ((bad anatomy)), ((bad proportions)), ((extra limbs)), cloned face, (((skinny))), glitchy, ((extra breasts)), ((double torso)), \
-                                ((extra arms)), ((extra hands)), ((mangled fingers)), ((missing breasts)), (missing lips), ((ugly face)), ((fat)), ((extra legs)), anime",
+                                ((extra arms)), ((extra hands)), ((mangled fingers)), ((missing breasts)), (missing lips), ((ugly face)), ((fat)), ((extra legs))",
                 "width": "512",
                 "height": "512",
                 "samples": "1",
