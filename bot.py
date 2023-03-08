@@ -1,8 +1,8 @@
+import requests
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters import Command
 from aiogram.utils import executor
-import requests
 
 bot = Bot(token='6273491081:AAEBVJ2paplE3C4KZE3fNT6qpsRk_YPW7bk')
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -40,6 +40,7 @@ async def f(message: types.Message):
 
         if response.json()['image_urls']:
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
+            
             await message.answer("Here's your photo.")
             await bot.send_photo(chat_id=message.chat.id, photo=response.json()['image_urls'][0])
         else:
@@ -60,9 +61,16 @@ async def f(message: types.Message):
                 "webhook": None,
                 "track_id": None
             })
+            
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
-            await message.answer(text)
-            await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0])
+            
+            if len(text) <= 200:
+                await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0],
+                                     caption=text)
+            else:
+                await message.answer(text)
+                await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0])
+
 
     except Exception:
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
