@@ -32,7 +32,7 @@ async def f(message: types.Message):
         headers = {
             "accept": "application/json",
             "content-type": "application/json",
-            "X-API-KEY": "cd85b43a-ad30-4732-8e23-4afb43983e72"
+            "X-API-KEY": "66b6a8ef-4428-4817-805b-a72408e7c90d"
         }
 
         response = requests.post(url, json=payload, headers=headers)
