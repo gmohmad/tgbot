@@ -40,13 +40,12 @@ async def f(message: types.Message):
 
         if response.json()['image_urls']:
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
-            
             await message.answer("Here's your photo.")
             await bot.send_photo(chat_id=message.chat.id, photo=response.json()['image_urls'][0])
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
-                "key": "emjh65FFSdStgAObHVSH3dDCcvOpRRgnLcx9EZz4gqm46wmFd73tLzvneQiv",
-                "prompt": message.text + ', not detailed, cartoon style, not realistic, simplefied, colorfull, light, colored',
+                "key": "i4lCIkZlQ3luOzFdXdDJ4uWKjJWJhzrBqpnE4SDpuAQoid71rWu6xu3GfTAx",
+                "prompt": message.text + ', high quality drawing style, not detailed, cartoon style, not realistic, simplefied, colorfull, light, colored',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
                                 (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
                                 ((bad anatomy)), ((bad proportions)), ((extra limbs)), cloned face, (((skinny))), glitchy, ((extra breasts)), ((double torso)), \
@@ -61,9 +60,7 @@ async def f(message: types.Message):
                 "webhook": None,
                 "track_id": None
             })
-            
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
-            
             if len(text) <= 200:
                 await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0],
                                      caption=text)
