@@ -45,7 +45,7 @@ async def f(message: types.Message):
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
                 "key": "i4lCIkZlQ3luOzFdXdDJ4uWKjJWJhzrBqpnE4SDpuAQoid71rWu6xu3GfTAx",
-                "prompt": message.text + ', high quality drawing style, not detailed, cartoon style, not realistic, simplefied, colorfull, light, colored',
+                "prompt": message.text + ', high quality cartoon, not detailed, cartoon style, not realistic, simplefied, colorfull, light, colored',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
                                 (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
                                 ((bad anatomy)), ((bad proportions)), ((extra limbs)), cloned face, (((skinny))), glitchy, ((extra breasts)), ((double torso)), \
