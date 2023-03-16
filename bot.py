@@ -1,3 +1,5 @@
+import re
+
 import requests
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -27,16 +29,15 @@ async def f(message: types.Message):
         payload = {
             "enable_google_results": True,
             "enable_memory": False,
-            "input_text": message.text
+            "input_text": f'my query is: {message.text}, but dont send me any link, only text'
         }
         headers = {
             "accept": "application/json",
             "content-type": "application/json",
-            "X-API-KEY": "66b6a8ef-4428-4817-805b-a72408e7c90d"
+            "X-API-KEY": "06aeb672-8d49-4ace-9b41-1837b70906b2"
         }
 
         response = requests.post(url, json=payload, headers=headers)
-        text = response.json()['message']
 
         if response.json()['image_urls']:
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
@@ -44,8 +45,8 @@ async def f(message: types.Message):
             await bot.send_photo(chat_id=message.chat.id, photo=response.json()['image_urls'][0])
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
-                "key": "i4lCIkZlQ3luOzFdXdDJ4uWKjJWJhzrBqpnE4SDpuAQoid71rWu6xu3GfTAx",
-                "prompt": message.text + ', high quality cartoon, not detailed, cartoon style, not realistic, simplefied, colorfull, light, colored',
+                "key": "YmnF8ifpCXQ3X6fzGfxtbcFKsmBF2iVWlRP1IzfEDEZKfNYUeoBfE8kVvbGo",
+                "prompt": message.text + 'flat style, Flat style, colorfull, 8k',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
                                 (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
                                 ((bad anatomy)), ((bad proportions)), ((extra limbs)), cloned face, (((skinny))), glitchy, ((extra breasts)), ((double torso)), \
@@ -60,14 +61,18 @@ async def f(message: types.Message):
                 "webhook": None,
                 "track_id": None
             })
-            await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
-            if len(text) <= 200:
-                await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0],
-                                     caption=text)
-            else:
-                await message.answer(text)
-                await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0])
 
+            brackets = re.compile("\[\d+\]")
+            text = brackets.sub('', response.json()['message'])
+
+            await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
+
+            if len(text) <= 200:
+                await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0], caption=text)
+                pass
+            else:
+                await message.answer((text.replace('<b', '☺', 1)[:text.index('☺')] if '<b' in text else text))
+                await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0])
 
     except Exception:
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
@@ -76,3 +81,4 @@ async def f(message: types.Message):
 
 
 executor.start_polling(dp)
+
