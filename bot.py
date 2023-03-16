@@ -46,7 +46,7 @@ async def f(message: types.Message):
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
                 "key": "YmnF8ifpCXQ3X6fzGfxtbcFKsmBF2iVWlRP1IzfEDEZKfNYUeoBfE8kVvbGo",
-                "prompt": message.text + 'flat style, Flat style, colorfull, 8k',
+                "prompt": message.text + 'flat style, Flat style, colorfull',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
                                 (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
                                 ((bad anatomy)), ((bad proportions)), ((extra limbs)), cloned face, (((skinny))), glitchy, ((extra breasts)), ((double torso)), \
