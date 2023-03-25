@@ -1,5 +1,3 @@
-import re
-
 import requests
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -27,9 +25,9 @@ async def f(message: types.Message):
 
         url = "https://api.writesonic.com/v2/business/content/chatsonic?engine=premium"
         payload = {
-            "enable_google_results": True,
+            "enable_google_results": False,
             "enable_memory": False,
-            "input_text": f'my query is: {message.text}, but dont send me any link, only text'
+            "input_text": f'{message.text}. NO LINKS, NO TAGS in your answer.',
         }
         headers = {
             "accept": "application/json",
@@ -38,7 +36,7 @@ async def f(message: types.Message):
         }
 
         response = requests.post(url, json=payload, headers=headers)
-
+        
         if response.json()['image_urls']:
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
             await message.answer("Here's your photo.")
@@ -46,7 +44,7 @@ async def f(message: types.Message):
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
                 "key": "YmnF8ifpCXQ3X6fzGfxtbcFKsmBF2iVWlRP1IzfEDEZKfNYUeoBfE8kVvbGo",
-                "prompt": message.text + 'flat style, Flat style, colorfull',
+                "prompt": f'a detailed isometric flat design vector illustration of {message.text} in the style of medieval fantasy',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
                                 (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
                                 ((bad anatomy)), ((bad proportions)), ((extra limbs)), cloned face, (((skinny))), glitchy, ((extra breasts)), ((double torso)), \
@@ -62,8 +60,7 @@ async def f(message: types.Message):
                 "track_id": None
             })
 
-            brackets = re.compile("\[\d+\]")
-            text = brackets.sub('', response.json()['message'])
+            text = response.json()['message']
 
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
 
@@ -71,7 +68,7 @@ async def f(message: types.Message):
                 await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0], caption=text)
                 pass
             else:
-                await message.answer((text.replace('<b', '☺', 1)[:text.index('☺')] if '<b' in text else text))
+                await bot.send_message(chat_id=message.chat.id, text=text, parse_mode='HTML')
                 await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0])
 
     except Exception:
@@ -81,4 +78,5 @@ async def f(message: types.Message):
 
 
 executor.start_polling(dp)
+
 
