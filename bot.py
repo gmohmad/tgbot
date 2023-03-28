@@ -43,7 +43,7 @@ async def f(message: types.Message):
             await bot.send_photo(chat_id=message.chat.id, photo=response.json()['image_urls'][0])
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
-                "key": "YmnF8ifpCXQ3X6fzGfxtbcFKsmBF2iVWlRP1IzfEDEZKfNYUeoBfE8kVvbGo",
+                "key": "zHIu8P4QLmaXRQbU8ArrgiPQM9WgvonCkUAKTkvwcbg0NrO0TvGqegc4gyrT",
                 "prompt": f'a detailed isometric flat design vector illustration of {message.text} in the style of medieval fantasy',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
                                 (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
