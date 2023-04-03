@@ -1,3 +1,51 @@
+# import os
+# from math import sin, cos, log, e, pi
+# from aiogram import Bot, Dispatcher, types
+# from aiogram.contrib.fsm_storage.memory import MemoryStorage
+# from aiogram.dispatcher.filters import Command
+# from aiogram.utils import executor
+# import matplotlib.pyplot as plt
+# import numpy as np
+#
+# bot = Bot(token='6262141455:AAHF1-PPKXbv4hPpJjksA6Pb3Ne0JQLNAis')
+# dp = Dispatcher(bot, storage=MemoryStorage())
+#
+#
+# @dp.message_handler(Command('start'))
+# async def enter_test(message: types.Message):
+#     await message.answer('Привет!\n'
+#                          'Введите фунцию и бот выдаст вам ее график\n'
+#                          'Фунция должна быть вида y = ...')
+#
+#
+# @dp.message_handler()
+# async def f(message: types.Message):
+#     try:
+#         x = np.linspace(-5, 5, 100)
+#         y = eval(message.text.replace(' ', '')[2:])
+#         fig = plt.figure()
+#         ax = fig.add_subplot(1, 1, 1)
+#         ax.spines['left'].set_position('center')
+#         ax.spines['bottom'].set_position('zero')
+#         ax.spines['right'].set_color('none')
+#         ax.spines['top'].set_color('none')
+#         ax.xaxis.set_ticks_position('bottom')
+#         ax.yaxis.set_ticks_position('left')
+#         plt.plot(x, y, 'r')
+#         fig.savefig('som.png')
+#
+#         photo = open('som.png', 'rb')
+#
+#         await bot.send_photo(chat_id=message.chat.id, photo=photo, caption=f'Вот график функции {message.text}')
+#         os.remove('som.png')
+#
+#     except Exception:
+#         await message.answer('Чтото пошло не так')
+#
+#
+# executor.start_polling(dp)
+#
+
 import requests
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -36,7 +84,7 @@ async def f(message: types.Message):
         }
 
         response = requests.post(url, json=payload, headers=headers)
-        
+
         if response.json()['image_urls']:
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
             await message.answer("Here's your photo.")
@@ -45,7 +93,13 @@ async def f(message: types.Message):
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
                 "key": "zHIu8P4QLmaXRQbU8ArrgiPQM9WgvonCkUAKTkvwcbg0NrO0TvGqegc4gyrT",
                 "prompt": f'a detailed isometric flat design vector illustration of {message.text}',
-                "negative_prompt": "",
+                "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), "
+                                   "((poorly drawn face)), (((mutation))), (((deformed))), (((tiling))), ((naked)), "
+                                   "((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, ((bad anatomy)), "
+                                   "((bad proportions)), ((extra limbs)), cloned face, (((skinny))), "
+                                   "glitchy, ((extra breasts)), ((double torso)), ((extra arms)), "
+                                   "((extra hands)), ((mangled fingers)), ((missing breasts)), (missing lips), "
+                                   "((ugly face)), ((fat)), ((extra legs)), anime",
                 "width": "512",
                 "height": "512",
                 "samples": "1",
@@ -75,5 +129,3 @@ async def f(message: types.Message):
 
 
 executor.start_polling(dp)
-
-
