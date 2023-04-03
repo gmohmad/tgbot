@@ -44,11 +44,8 @@ async def f(message: types.Message):
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
                 "key": "zHIu8P4QLmaXRQbU8ArrgiPQM9WgvonCkUAKTkvwcbg0NrO0TvGqegc4gyrT",
-                "prompt": f'a detailed isometric flat design vector illustration of {message.text} in the style of medieval fantasy',
-                "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), ((poorly drawn face)), \
-                                (((mutation))), (((deformed))), (((tiling))), ((naked)), ((tile)), ((fleshpile)), ((ugly)), (((abstract))), blurry, \
-                                ((bad anatomy)), ((bad proportions)), ((extra limbs)), cloned face, (((skinny))), glitchy, ((extra breasts)), ((double torso)), \
-                                ((extra arms)), ((extra hands)), ((mangled fingers)), ((missing breasts)), (missing lips), ((ugly face)), ((fat)), ((extra legs))",
+                "prompt": f'a detailed isometric flat design vector illustration of {message.text}',
+                "negative_prompt": "",
                 "width": "512",
                 "height": "512",
                 "samples": "1",
