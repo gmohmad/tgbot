@@ -6,6 +6,7 @@ from aiogram.utils import executor
 
 bot = Bot(token='6273491081:AAEBVJ2paplE3C4KZE3fNT6qpsRk_YPW7bk')
 dp = Dispatcher(bot, storage=MemoryStorage())
+TEXT, PHOTO = '', ''
 
 
 @dp.message_handler(Command('start'))
@@ -21,6 +22,13 @@ async def f(message: types.Message):
     await message.answer("Your request is being processed.\n"
                          "It may take about a minute.\n"
                          "Please, be patient...")
+
+    btn1 = types.InlineKeyboardButton('Yes', callback_data='btn1')
+    btn2 = types.InlineKeyboardButton('No', callback_data='btn2')
+    inline_kb1 = types.InlineKeyboardMarkup().add(btn1, btn2)
+
+    global TEXT, PHOTO
+
     try:
 
         url = "https://api.writesonic.com/v2/business/content/chatsonic?engine=premium"
@@ -64,20 +72,42 @@ async def f(message: types.Message):
             })
 
             text = response.json()['message']
+            print(photo.text)
+            TEXT, PHOTO = text, photo.json()['output'][0]
 
             await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
 
             if len(text) <= 200:
                 await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0], caption=text)
+                await message.answer('Send messages to the channel?', reply_markup=inline_kb1)
                 pass
             else:
                 await bot.send_message(chat_id=message.chat.id, text=text, parse_mode='HTML')
                 await bot.send_photo(chat_id=message.chat.id, photo=photo.json()['output'][0])
+                await message.answer('Send messages to the channel?', reply_markup=inline_kb1)
 
     except Exception:
         await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id + 1)
         await message.answer('Something went wrong...\n'
                              'Try again later.')
+
+
+@dp.callback_query_handler(lambda c: c.data == 'btn1' or c.data == 'btn2')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    code = callback_query.data[-1]
+    if code == '1':
+        if len(TEXT) <= 200:
+            await bot.send_photo(chat_id=-1001897197879, photo=PHOTO, caption=TEXT)
+        else:
+            await bot.send_message(chat_id=-1001897197879, text=TEXT, parse_mode='HTML')
+            await bot.send_photo(chat_id=-1001897197879, photo=PHOTO)
+
+        await callback_query.answer('Done! ✅ Easy')
+        await bot.delete_message(chat_id=callback_query.message.chat.id,
+                                 message_id=callback_query.message.message_id)
+    else:
+        await callback_query.answer("Ok i won't")
+        await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
 
 
 executor.start_polling(dp)
