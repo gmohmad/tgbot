@@ -102,7 +102,7 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
             await bot.send_message(chat_id=-1001897197879, text=TEXT, parse_mode='HTML')
             await bot.send_photo(chat_id=-1001897197879, photo=PHOTO)
 
-        await callback_query.answer('Done! ✅ Easy')
+        await callback_query.answer('Done! ✅')
         await bot.delete_message(chat_id=callback_query.message.chat.id,
                                  message_id=callback_query.message.message_id)
     else:
