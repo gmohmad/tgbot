@@ -4,7 +4,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters import Command
 from aiogram.utils import executor
 
-bot = Bot(token='6273491081:AAEBVJ2paplE3C4KZE3fNT6qpsRk_YPW7bk')
+bot = Bot(token='your_bot_token')
 dp = Dispatcher(bot, storage=MemoryStorage())
 TEXT, PHOTO = '', ''
 
@@ -40,7 +40,7 @@ async def f(message: types.Message):
         headers = {
             "accept": "application/json",
             "content-type": "application/json",
-            "X-API-KEY": "06aeb672-8d49-4ace-9b41-1837b70906b2"
+            "X-API-KEY": "your_API_key"
         }
 
         response = requests.post(url, json=payload, headers=headers)
@@ -51,7 +51,7 @@ async def f(message: types.Message):
             await bot.send_photo(chat_id=message.chat.id, photo=response.json()['image_urls'][0])
         else:
             photo = requests.post('https://stablediffusionapi.com/api/v3/text2img', data={
-                "key": "zHIu8P4QLmaXRQbU8ArrgiPQM9WgvonCkUAKTkvwcbg0NrO0TvGqegc4gyrT",
+                "key": "your_API_key",
                 "prompt": f'a detailed isometric flat design vector illustration of {message.text}',
                 "negative_prompt": "((out of frame)), ((extra fingers)), mutated hands, ((poorly drawn hands)), "
                                    "((poorly drawn face)), (((mutation))), (((deformed))), (((tiling))), ((naked)), "
@@ -97,16 +97,16 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     code = callback_query.data[-1]
     if code == '1':
         if len(TEXT) <= 200:
-            await bot.send_photo(chat_id=-1001897197879, photo=PHOTO, caption=TEXT)
+            await bot.send_photo(chat_id='your_channel_id', photo=PHOTO, caption=TEXT)
         else:
-            await bot.send_message(chat_id=-1001897197879, text=TEXT, parse_mode='HTML')
-            await bot.send_photo(chat_id=-1001897197879, photo=PHOTO)
+            await bot.send_message(chat_id='your_channel_id', text=TEXT, parse_mode='HTML')
+            await bot.send_photo(chat_id='your_channel_id', photo=PHOTO)
 
         await callback_query.answer('Done! ✅')
         await bot.delete_message(chat_id=callback_query.message.chat.id,
                                  message_id=callback_query.message.message_id)
     else:
-        await callback_query.answer("Ok i won't")
+        await callback_query.answer("Ok")
         await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
 
 
