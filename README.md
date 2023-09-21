@@ -14,4 +14,4 @@
 #### And run the bot 
 ``` python bot.py ```
 
-#### There's also a Procfile for Railway daployment
+#### There's also a Procfile for a Railway deployment
